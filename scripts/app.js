@@ -4,8 +4,7 @@ $(document).ready(function () {
     }
 
     loadNumeration();
-    loadVariableTable();
-    loadArrayVariables();
+    loadVariables();
 
     $(".value").on('change keypress paste focus textInput input', function () {
         var value = $(this).val();
@@ -32,6 +31,66 @@ $(document).ready(function () {
      });*/
 
 });
+
+function getVariableRegex() {
+    return /\${(.*?)}/g;
+}
+
+function loadVariables() {
+    var regex = getVariableRegex();
+    var allSpans = $("span").filter(function () { return ($(this).text().match(regex)); });
+    var arrayElements = $(":contains('ARRAY')").nextAll(".Comment").filter(function () { return ($(this).text().indexOf("${") > -1); });
+
+    updateAllVariableElements(allSpans, arrayElements);
+    var variablesElements = $(".simpleVar");
+    loadVariableTable(variablesElements);
+    loadArrayVariables(arrayElements);
+}
+
+function getVariableName(str) {
+    var regex = /{([^}]+)}/g;
+    var matches = regex.exec(str);
+    return matches && matches.length > 1 ? matches[1] : "";
+}
+
+function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
+    var regex = getVariableRegex();
+    allSpans.each(function () {
+        var text = $(this).text();
+        var variables = (text).match(regex);
+        var isArrayVariable = $.inArray(text, arrayTextArr)!=-1;
+        var spanClassName = isArrayVariable ? 'arrayVarElement' : 'simpleVarElement';
+        if (variables && variables.length > 0) {
+            var currentText = text;
+            var newText = "";
+            var name = getVariableName(text);
+            variables.forEach(function (item) {
+                var elClassName = $.inArray(item, allArrayVariables) != -1 ? 'arrayVar' : 'simpleVar';
+                newText+="<span class='" + elClassName + "' name='" + name + "'>" + item + "</span>";
+            })
+            $(this).html(newText);
+        }
+        $(this).addClass(spanClassName);
+    });
+}
+
+function updateAllVariableElements(allSpans, arrayElements) {
+    var arrayTextArr = $.makeArray(arrayElements.map(function () {
+        return $(this).text();
+    })).distinct();
+
+    var regex = getVariableRegex();
+    var allArrayVariables = [];
+    arrayTextArr.forEach(function(arrayText) {
+        var variables = (arrayText).match(regex);
+        variables.forEach(function(item) {
+            allArrayVariables.push(item);
+        })
+    });
+
+    allArrayVariables = allArrayVariables.distinct();
+    splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables);
+}
 
 function createArrayName(text) {
     var arrays = getAllMatches(text);
@@ -78,15 +137,15 @@ function getArrayEndPosition(startPosition, html) {
     var semicolonEnd = ";\n";
     var bracketsEnd = " {\n";
 
-    if (arrayFirstLine.indexOf(semicolonEnd)!=-1) {
+    if (arrayFirstLine.indexOf(semicolonEnd) != -1) {
         return html.indexOf(semicolonEnd, startPosition) + 1;
     }
 
-    if (arrayFirstLine.indexOf(bracketsEnd)!=-1) {
+    if (arrayFirstLine.indexOf(bracketsEnd) != -1) {
         var brackets = 1;
         var i = html.indexOf(bracketsEnd, startPosition) + bracketsEnd.length;
         while (brackets != 0 && i < html.length) {
-            if (html[i-1] == " " && html[i] == "{")
+            if (html[i - 1] == " " && html[i] == "{")
                 brackets++;
             if (html[i - 1] == " " && html[i] == "}")
                 brackets--;
@@ -115,9 +174,9 @@ function createFakeElements(arrays) {
 
             startPosition += newStartElement.length;
             endPosition = getArrayEndPosition(startPosition, html);
-            
+
             html = html.insert(endPosition, newEndElement);
-            
+
         })
     });
     $("#vimCodeElement").html(html)
@@ -129,9 +188,7 @@ function createUniqueArrayList(arrays, uniqueArraysText) {
     })
 }
 
-function loadArrayVariables() {
-    var arrays = $(":contains('ARRAY')").nextAll(".Comment").filter(function () { return ($(this).text().indexOf("${") > -1); });
-    
+function loadArrayVariables(arrays) {
     var uniqueArraysText = $.makeArray(arrays.map(function () {
         return $(this).text();
     })).distinct();
@@ -164,18 +221,11 @@ function loadNumeration() {
     });
 }
 
-function loadVariableId(allSpans) {
-    allSpans.each(function () {
-        $(this).attr('name', getVariableName($(this).text()));
-        $(this).addClass('variable')
-    });
-}
-
-function createVariableTable(allSpans) {
+function createVariableTable(variablesElements) {
     var newTable = $("#tableTemplate")
         .clone().removeAttr("id").show();
 
-    var uniqueParameters = $.makeArray(allSpans.map(function () {
+    var uniqueParameters = $.makeArray(variablesElements.map(function () {
         return $(this).text();
     })).distinct();
 
@@ -204,40 +254,8 @@ function getAllMatches(str) {
     return str.match(regex);
 }
 
-function getVariableName(str) {
-    var regex = /{([^}]+)}/g;
-    var matches = regex.exec(str);
-    return matches && matches.length > 1 ? matches[1] : "";
-}
-
-function getVariableRegex() {
-    return /\${(.*?)}/g;
-}
-
-function splitAllVariableSpans() {
-    var regex = getVariableRegex();
-    $("span").each(function () {
-        if (!$(this).hasClass('Comment')) {
-            var variables = ($(this).text()).match(regex);
-            if (variables && variables.length > 1) {
-                var currentText = $(this).text();
-                var newText = currentText;
-                variables.forEach(function (item) {
-                    newText = newText.replace(item, '<span>' + item + '</span>');
-                })
-
-                $(this).text(newText);
-            }
-        }
-    });
-}
-
-function loadVariableTable() {
-    //splitAllVariableSpans();
-    var regex = getVariableRegex();
-    var allSpans = $("span").filter(function () { return (!$(this).hasClass('Comment')) && ($(this).text().match(regex)) });
-    loadVariableId(allSpans);
-    createVariableTable(allSpans);
+function loadVariableTable(variablesElements) {
+    createVariableTable(variablesElements);
 }
 /* function to open any folds containing a jumped-to line before jumping to it */
 function JumpToLine() {
