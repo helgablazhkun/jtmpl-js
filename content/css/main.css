@@ -106,7 +106,7 @@ html, body {
 }
 
 .menu-container.active .button {
-    right: 380px;
+    right: 580px;
 }
 
 .button:before, .button:after {
@@ -128,10 +128,10 @@ html, body {
 
 .menu {
     position: fixed;
-    right: -380px;
+    right: -580px;
     top: 0;
     height: 100%;
-    width: 380px;
+    width: 580px;
     background: #000;
     transition: right 0.5s;
 }
@@ -235,8 +235,8 @@ html, body {
   height: 0;
   border-top: 13px solid #000000;
   border-botom: 13px solid transparent;
-  border-left: 190px solid transparent;
-  border-right: 190px solid transparent;
+  border-left: 290px solid transparent;
+  border-right: 290px solid transparent;
   left: 0;
   bottom: -13px;
   bottom: 0px;

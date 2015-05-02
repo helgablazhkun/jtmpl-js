@@ -16,6 +16,8 @@ $(document).ready(function () {
 
     $(".btnPlus").on('click', function () {
         var className = $(this).data('variableId');
+        var arrayRowTableId = $(this).data('arrayRowTableId');
+        loadArrayVariableInputs(className, arrayRowTableId);
         $("el[class='" + className + "']").each(function () {
             var el = $(this).clone();
             el.removeClass(className)
@@ -31,6 +33,17 @@ $(document).ready(function () {
      });*/
 
 });
+
+function loadArrayVariableInputs(arrayVariablesText, arrayRowTableId) {
+    var arrays = getAllMatches(arrayVariablesText);
+    var str = '<tr valign="left"><td>';
+    arrays.forEach(function (item, index) {
+        str += '<input type="text" class="code" value="' + item + '" /> &nbsp;';
+    });
+    str += '</td></tr>';
+    $('#' + arrayRowTableId + ' tr:last').after(str);
+
+}
 
 function getVariableRegex() {
     return /\${(.*?)}/g;
@@ -109,16 +122,20 @@ function createArrayVariableTable(uniqueArrays) {
     var newTable = $("#arrayTableTemplate")
        .clone().removeAttr("id").show();
 
-    var rows = $.map(uniqueArrays, function (value) {
+    var rows = $.map(uniqueArrays, function (value, index) {
 
         var row = $("#arrayRowTemplate")
-            .clone().removeAttr("id").show()
+            .clone().removeAttr("id").show();
 
         var arrayName = createArrayName(value)
+
+        var arrayRowTable = row.find(".arrayRowTable");
+        var arrayRowTableId = "arrayRowTable_" + index;
+        arrayRowTable.attr('id', arrayRowTableId);
         row.find(".arrayName").text(arrayName);
         var button = row.find(".btnPlus");
         button.data("variableId", arrayName);
-
+        button.data("arrayRowTableId", arrayRowTableId);
         return row[0];
     });
 
@@ -250,7 +267,7 @@ function createVariableTable(variablesElements) {
 }
 
 function getAllMatches(str) {
-    var regex = /{([^}]+)}/g;
+    var regex = getVariableRegex();
     return str.match(regex);
 }
 
