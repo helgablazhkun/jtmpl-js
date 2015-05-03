@@ -41,14 +41,21 @@ function onPlusButtonClick() {
 
 function copyArrayBlock(arrayVariableText, arrayVariablesDictionary)
 {
-    $("el[class='" + arrayVariableText + "']").each(function () {
+    $("el[class='" + arrayVariableText + "']").each(function (i) {
         var el = $(this).clone();
         el.removeClass(arrayVariableText)
-        el.find(".arrayVar").each(function () {
+        var insertedClass = arrayVariableText + "_inserted"+"_"+i;
+        el.addClass(insertedClass);
+        el.find(".arrayVar").each(function() {
             var value = arrayVariablesDictionary[$(this).text()];
             $(this).attr('name', value);
-        })
-        $(this).after(el);
+        });
+        var lastInserted = $("el[class='" + insertedClass + "']");
+        if (lastInserted.length > 0)
+            lastInserted.last().after(el);
+        else
+            $(this).after(el);
+
         loadNumeration();
     });
 }
