@@ -6,39 +6,66 @@ $(document).ready(function () {
     loadNumeration();
     loadVariables();
 
-    $(".value").on('change keypress paste focus textInput input', function () {
-        var value = $(this).val();
-        var name = $(this).data('variableId');
-        $("span[name='" + name + "']").each(function () {
-            $(this).text(value);
-        });
-    });
-
-    $(".btnPlus").on('click', function () {
-        var className = $(this).data('variableId');
-        var arrayRowTableId = $(this).data('arrayRowTableId');
-        loadArrayVariableInputs(className, arrayRowTableId);
-        $("el[class='" + className + "']").each(function () {
-            var el = $(this).clone();
-            el.removeClass(className)
-            $(this).after(el);
-            loadNumeration();
-        });
-    });
-
-    /* $(document).on("change", ".value", function (event) {
-         var value = $(this).val();
-         var id = $(this).data('variableId');
-         $('#' + id).text(value);
-     });*/
-
+    onPlusButtonClick();
+    subscribeOnInputChange();
 });
 
-function loadArrayVariableInputs(arrayVariablesText, arrayRowTableId) {
-    var arrays = getAllMatches(arrayVariablesText);
+function subscribeOnInputChange() {
+    $(".value").on('change keypress paste focus textInput input', function () {
+        onVariableChange($(this));
+    });
+}
+
+function onVariableChange(el) {
+    var value = el.val();
+    var name = el.attr('variableId');
+    $("span[name='" + name + "']").each(function () {
+        $(this).text(value);
+    });
+}
+
+function onPlusButtonClick() {
+    $(".btnPlus").on('click', function () {
+        var arrayVariableText = $(this).data('variableId');
+        var arrayRowTableId = $(this).data('arrayRowTableId');
+        var clickCount = parseInt($(this).data('clickCount')) + 1;
+        var arrayVariablesDictionary = getUniqueArrayVariablesDictionary(arrayVariableText, clickCount);
+        loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary);
+        copyArrayBlock(arrayVariableText, arrayVariablesDictionary);
+
+        $(this).data('clickCount', clickCount);
+
+        subscribeOnInputChange();
+    });
+}
+
+function copyArrayBlock(arrayVariableText, arrayVariablesDictionary)
+{
+    $("el[class='" + arrayVariableText + "']").each(function () {
+        var el = $(this).clone();
+        el.removeClass(arrayVariableText)
+        el.find(".arrayVar").each(function () {
+            var value = arrayVariablesDictionary[$(this).text()];
+            $(this).attr('name', value);
+        })
+        $(this).after(el);
+        loadNumeration();
+    });
+}
+
+function getUniqueArrayVariablesDictionary(arrayVariableText, clickCount)
+{
+    var arrays = getAllMatches(arrayVariableText);
+    var arrayVariablesDictionary = {};
+    arrays.forEach(function(item) {
+        arrayVariablesDictionary[item] = item + "_" + clickCount;
+    });
+    return arrayVariablesDictionary;
+}
+function loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary) {
     var str = '<tr valign="left"><td>';
-    arrays.forEach(function (item, index) {
-        str += '<input type="text" class="code" value="' + item + '" /> &nbsp;';
+    $.each(arrayVariablesDictionary, function (key, val) {
+        str += '<input type="text" class="value" value="' + key + '" variableId="' + val + '" /> &nbsp;';
     });
     str += '</td></tr>';
     $('#' + arrayRowTableId + ' tr:last').after(str);
@@ -136,6 +163,7 @@ function createArrayVariableTable(uniqueArrays) {
         var button = row.find(".btnPlus");
         button.data("variableId", arrayName);
         button.data("arrayRowTableId", arrayRowTableId);
+        button.data("clickCount", 0);
         return row[0];
     });
 
@@ -254,7 +282,7 @@ function createVariableTable(variablesElements) {
         row.find(".variableName").text(value);
         var input = row.find(".value");
         input.val(value);
-        input.data("variableId", getVariableName(value));
+        input.attr("variableId", getVariableName(value));
 
         return row[0];
     });
