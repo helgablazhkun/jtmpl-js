@@ -107,15 +107,15 @@ function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
         var variables = (text).match(regex);
         var isArrayVariable = $.inArray(text, arrayTextArr)!=-1;
         var spanClassName = isArrayVariable ? 'arrayVarElement' : 'simpleVarElement';
+        var currentText = text;
         if (variables && variables.length > 0) {
-            var currentText = text;
             var newText = "";
             var name = getVariableName(text);
             variables.forEach(function (item) {
                 var elClassName = $.inArray(item, allArrayVariables) != -1 ? 'arrayVar' : 'simpleVar';
-                newText+="<span class='" + elClassName + "' name='" + name + "'>" + item + "</span>";
+                currentText = currentText.replace(item, "<span class='" + elClassName + "' name='" + name + "'>" + item + "</span>");
             })
-            $(this).html(newText);
+            $(this).html(currentText);
         }
         $(this).addClass(spanClassName);
     });
