@@ -88,12 +88,6 @@ function getHtmlWithoutElements(rootElementId, classToRemove) {
     return html;
 }
 
-function strip(html) {
-    var tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
-}
-
 function downloadInnerHtml(htmlString, mimeType) {
     var filename = getCurentFileName();
     filename = buildCompiledFileName(filename, "txt");

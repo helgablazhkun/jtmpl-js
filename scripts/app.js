@@ -86,7 +86,7 @@ function getVariableRegex() {
 function loadVariables() {
     var regex = getVariableRegex();
     var allSpans = $("span").filter(function () { return ($(this).text().match(regex)); });
-    var arrayElements = $(":contains('ARRAY')").nextAll(".Comment").filter(function () { return ($(this).text().indexOf("${") > -1); });
+    var arrayElements = $(":contains('ARRAY')").nextAll(".Comment").filter(function () { return ($(this).text().indexOf(": ${") > -1); });
 
     updateAllVariableElements(allSpans, arrayElements);
     var variablesElements = $(".simpleVar");
@@ -181,21 +181,54 @@ function createArrayVariableTable(uniqueArrays) {
         .append(newTable);
 }
 
-function getArrayEndPosition(startPosition, html) {
+function getArrayFirstLine(startPosition, html) {
     var newLineKey = "LineNr";
-    var arrayFirstLineStart = html.indexOf(newLineKey, startPosition);
-    var arrayFirstLineEnd = html.indexOf(newLineKey, arrayFirstLineStart + newLineKey.length);
-    var arrayFirstLine = html.substring(arrayFirstLineStart, arrayFirstLineEnd);
+    var flag = false;
+
+    function hasKeyCommentWord(str) {
+        var keys = ["# QUERY", "# NOTE", "# JNOTE"];
+        var hasKey = !keys.every(function(key) {
+            if (strip(str).indexOf(key) != -1)
+                return false;
+            else return true;
+        });
+        return hasKey;
+    }
+
+    while (!flag) {
+        var arrayFirstLineStart = html.indexOf(newLineKey, startPosition);
+        var arrayFirstLineEnd = html.indexOf(newLineKey, arrayFirstLineStart + newLineKey.length);
+        var arrayFirstLine = html.substring(arrayFirstLineStart, arrayFirstLineEnd);
+        
+        if (hasKeyCommentWord(arrayFirstLine)) {
+            startPosition = arrayFirstLineEnd;
+        } else {
+            flag = true;
+        }
+    }
+    return {
+        ArrayFirstLine: arrayFirstLine,
+        StartPosition: startPosition
+    };
+}
+
+function getArrayEndPosition(startPosition, html) {
+
+    var arrayFirstLineObj = getArrayFirstLine(startPosition, html);
+    var arrayFirstLine = arrayFirstLineObj.ArrayFirstLine;
+    startPosition = arrayFirstLineObj.StartPosition;
+
     var semicolonEnd = ";\n";
     var bracketsEnd = " {\n";
+    var openBracket = " {";
 
     if (arrayFirstLine.indexOf(semicolonEnd) != -1) {
         return html.indexOf(semicolonEnd, startPosition) + 1;
     }
 
-    if (arrayFirstLine.indexOf(bracketsEnd) != -1) {
+    if (strip(arrayFirstLine).indexOf(bracketsEnd) != -1) {
         var brackets = 1;
-        var i = html.indexOf(bracketsEnd, startPosition) + bracketsEnd.length;
+        var i = html.indexOf(openBracket, startPosition) + openBracket.length;
         while (brackets != 0 && i < html.length) {
             if (html[i - 1] == " " && html[i] == "{")
                 brackets++;
