@@ -86,7 +86,7 @@ function getVariableRegex() {
 function loadVariables() {
     var regex = getVariableRegex();
     var allSpans = $("span").filter(function () { return ($(this).text().match(regex)); });
-    var arrayElements = $(":contains('ARRAY')").nextAll(".Comment").filter(function () { return ($(this).text().indexOf(": ${") > -1); });
+    var arrayElements = $(":contains('ARRAY')").next(".Comment").filter(function () { return ($(this).text().indexOf(": ${") > -1); });
 
     updateAllVariableElements(allSpans, arrayElements);
     var variablesElements = $(".simpleVar");
