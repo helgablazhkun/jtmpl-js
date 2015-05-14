@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <link rel="stylesheet" href="content/css/main.css"/>
+    <script src="scripts/jquery/jquery-2.1.3.min.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/menu.js"></script>
+    <script src="scripts/backToTop.js"></script>
+    <script src="scripts/stringExtension.js"></script>
+    <script src="scripts/export.js"></script>
+    <script src="scripts/domUtils.js"></script>
+    <script src="scripts/arrayUtils.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>[${tmpl_tag}] Dynamic router configuration template.</title>
+</head>
+
+<body onload='JumpToLine();'>
+
+<div class="menu-container">
+    <a class="button"></a>
+    <div class="menu">
+        <div id='cssmenu'>
+            <ul>
+                <li class='active has-sub'>
+                    <a href='#'><span>VARIABLES</span></a>
+                    <ul><li><div id="variablesTable"/></li></ul>
+                </li>
+                <li class='active has-sub'>
+                    <a href='#'><span>ARRAYS</span></a>
+                    <ul><li><div id="arrayTable"/></li></ul>
+                </li>
+                <li><a id="downloadlink" href='#'><span>EXPORT</span></a></li>
+                <li><a href='#'><span>HELP</span></a></li>
+                <li class='last'><a href='#'><span>ABOUT</span></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div>
