@@ -186,7 +186,7 @@ function getArrayFirstLine(startPosition, html) {
     var flag = false;
 
     function hasKeyCommentWord(str) {
-        var keys = ["# QUERY", "# NOTE", "# JNOTE"];
+        var keys = ["# QUERY", "# NOTE", "# JNOTE", "* JNOTE"];
         var hasKey = !keys.every(function(key) {
             if (strip(str).indexOf(key) != -1)
                 return false;
