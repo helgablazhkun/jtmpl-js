@@ -125,5 +125,5 @@ function getCurentFileName() {
 }
 
 function buildCompiledFileName(filename, ext) {
-    return filename + "-compileled" + "." + ext;
+    return filename + "-compiled" + "." + ext;
 }
