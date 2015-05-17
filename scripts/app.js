@@ -24,18 +24,21 @@ function onVariableChange(el) {
     });
 }
 
+function createArrayInputStrings(buttonItem, copy) {
+    var arrayVariableText = buttonItem.data('variableId');
+    var arrayRowTableId = buttonItem.data('arrayRowTableId');
+    var clickCount = parseInt(buttonItem.data('clickCount')) + 1;
+    var arrayVariablesDictionary = getUniqueArrayVariablesDictionary(arrayVariableText, clickCount);
+    loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary);
+    buttonItem.data('clickCount', clickCount);
+    subscribeOnInputChange();
+    if(copy)
+        copyArrayBlock(arrayVariableText, arrayVariablesDictionary);
+}
+
 function onPlusButtonClick() {
     $(".btnPlus").on('click', function () {
-        var arrayVariableText = $(this).data('variableId');
-        var arrayRowTableId = $(this).data('arrayRowTableId');
-        var clickCount = parseInt($(this).data('clickCount')) + 1;
-        var arrayVariablesDictionary = getUniqueArrayVariablesDictionary(arrayVariableText, clickCount);
-        loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary);
-        copyArrayBlock(arrayVariableText, arrayVariablesDictionary);
-
-        $(this).data('clickCount', clickCount);
-
-        subscribeOnInputChange();
+        createArrayInputStrings($(this),true);
     });
 }
 
@@ -46,9 +49,11 @@ function copyArrayBlock(arrayVariableText, arrayVariablesDictionary)
         el.removeClass(arrayVariableText)
         var insertedClass = arrayVariableText + "_inserted"+"_"+i;
         el.addClass(insertedClass);
-        el.find(".arrayVar").each(function() {
-            var value = arrayVariablesDictionary[$(this).text()];
+        el.find(".arrayVar").each(function () {
+            var text = $(this).attr('variableId'); 
+            var value = arrayVariablesDictionary[text];
             $(this).attr('name', value);
+            $(this).text(text);
         });
         var lastInserted = $("el[class='" + insertedClass + "']");
         if (lastInserted.length > 0)
@@ -69,6 +74,7 @@ function getUniqueArrayVariablesDictionary(arrayVariableText, clickCount)
     });
     return arrayVariablesDictionary;
 }
+
 function loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary) {
     var str = '<tr valign="left"><td>';
     $.each(arrayVariablesDictionary, function (key, val) {
@@ -95,13 +101,14 @@ function loadVariables() {
 }
 
 function getVariableName(str) {
-    var regex = /{([^}]+)}/g;
+    var regex = getVariableRegex();
     var matches = regex.exec(str);
-    return matches && matches.length > 1 ? matches[1] : "";
+    return matches && matches.length > 0 ? matches[0] : "";
 }
 
 function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
     var regex = getVariableRegex();
+    var arrayListCount = {};
     allSpans.each(function () {
         var text = $(this).text();
         var variables = (text).match(regex);
@@ -112,8 +119,16 @@ function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
             var newText = "";
             var name = getVariableName(text);
             variables.forEach(function (item) {
-                var elClassName = $.inArray(item, allArrayVariables) != -1 ? 'arrayVar' : 'simpleVar';
-                currentText = currentText.replace(item, "<span class='" + elClassName + "' name='" + name + "'>" + item + "</span>");
+                var isArr = $.inArray(item, allArrayVariables) != -1;
+                if (isArr) {
+                    if (arrayListCount[name]>=0)
+                        arrayListCount[name]++;
+                    else
+                        arrayListCount[name] = 0;
+                }
+                var elClassName = isArr ? 'arrayVar' : 'simpleVar';
+                orderedName = isArr ? name + "_" + arrayListCount[name]: name;
+                currentText = currentText.replace(item, "<span class='" + elClassName + "' name='" + orderedName + "'"+ " variableId='" + name+"'>" + item + "</span>");
             })
             $(this).html(currentText);
         }
@@ -281,6 +296,11 @@ function loadArrayVariables(arrays) {
     var uniqueArrays = createUniqueArrayList(arrays, uniqueArraysText);
     createArrayVariableTable(uniqueArraysText);
     createFakeElements(uniqueArrays);
+    $(".btnPlus").each(function () {
+        if ($(this).data('variableId')) {
+            createArrayInputStrings($(this), false);
+        }
+    });
 }
 
 function loadNumeration() {
