@@ -117,8 +117,8 @@ function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
         var currentText = text;
         if (variables && variables.length > 0) {
             var newText = "";
-            var name = getVariableName(text);
             variables.forEach(function (item) {
+                var name = getVariableName(item);
                 var isArr = $.inArray(item, allArrayVariables) != -1;
                 if (isArr) {
                     if (arrayListCount[name]>=0)
