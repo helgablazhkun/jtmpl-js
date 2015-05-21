@@ -136,7 +136,7 @@ function splitAllVariableSpans(allSpans, arrayTextArr, allArrayVariables) {
                 var name = getVariableName(item);
                 var isArr = $.inArray(item, allArrayVariables) != -1;
                 var elClassName = isArr ? 'arrayVar' : 'simpleVar';
-                currentText = currentText.replace(item, "<span class='" + elClassName + "' name='" + name + " 'variableId='" + name + "'>" + item + "</span>");
+                currentText = currentText.replace(item, "<span class='" + elClassName + "' name='" + name + "' variableId='" + name + "'>" + item + "</span>");
             })
             $(this).html(currentText);
         }
