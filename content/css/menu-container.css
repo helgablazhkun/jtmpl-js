@@ -1,0 +1,72 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.button {
+    display: block;
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: #000;
+    transition: right 0.5s;
+}
+
+.menu-container.active .button {
+    right: 580px;
+}
+
+.button:before, .button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-top: 5px solid #fff;
+    border-bottom: 5px solid #fff;
+    width: 60%;
+    left: 20%;
+    height: 30%;
+    top: 23%;
+}
+
+.button:after {
+    border-bottom: none;
+    top: 43%;
+}
+
+.menu {
+    position: fixed;
+    right: -580px;
+    top: 0;
+    height: 100%;
+    width: 580px;
+    background: #000;
+    transition: right 0.5s;
+}
+
+.menu-container.active .menu {
+    right: 0;
+}
+
+.nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .nav li {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav a {
+        display: block;
+        padding: 10px;
+        color: #fff;
+        background: #000;
+        text-decoration: none;
+    }
