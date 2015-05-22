@@ -1,3 +1,17 @@
+.jtmpl a:link, a:visited {
+    color: inherit;
+    border-bottom: 1px dashed;
+    text-decoration: none;
+}
+
+.jtmpl a:hover {
+    border-bottom: none;
+}
+
+.jtmpl :target {
+    border: 1px dotted;
+}
+
 @font-face {
     font-family: 'anonymous_proregular';
     src: url('fonts/Anonymous_Pro-webfont.eot');
