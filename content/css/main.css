@@ -8,6 +8,10 @@
     border-bottom: none;
 }
 
+.jtmpl :target {
+    border: 1px dotted;
+}
+
 @font-face {
     font-family: 'anonymous_proregular';
     src: url('fonts/Anonymous_Pro-webfont.eot');
