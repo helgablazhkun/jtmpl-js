@@ -96,8 +96,7 @@ function downloadInnerHtml(htmlString, mimeType) {
 
 }
 
-function createFakeLink(filename, mimeType, htmlString)
-{
+function createFakeLink(filename, mimeType, htmlString) {
     var link = document.createElement('a');
     mimeType = mimeType || 'text/plain';
 
