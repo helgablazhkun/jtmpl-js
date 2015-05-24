@@ -102,3 +102,9 @@ body {
     margin: 7px;
     margin-top: 7px;
 }
+
+.table-variable{
+    border-color:#cccccc;
+    border-bottom: 1px solid grey;
+    width: 100%;
+  }
