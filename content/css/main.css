@@ -32,6 +32,7 @@ pre {
     white-space: pre-wrap;
     color: #eeeeee;
     background-color: #121212;
+    margin: 0;
 }
 
 body {
