@@ -65,48 +65,6 @@
   background: #151515;
   color: #ffffff;
 }
-#cssmenu ul > li.has-sub > a::after {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 13px solid #000000;
-  border-botom: 13px solid transparent;
-  border-left: 290px solid transparent;
-  border-right: 290px solid transparent;
-  left: 0;
-  bottom: -13px;
-  bottom: 0px;
-  z-index: 1;
-  opacity: 0;
-  -webkit-transition: all .2s ease;
-  -moz-transition: all .2s ease;
-  -ms-transition: all .2s ease;
-  -o-transition: all .2s ease;
-  transition: all .2s ease;
-}
-#cssmenu ul > li.has-sub > a::before {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 13px solid #151515;
-  border-botom: 13px solid transparent;
-  border-left: 170px  solid transparent;
-  border-right: 170px  solid transparent;
-  left: 0;
-  bottom: -12px;
-  bottom: -1px;
-  z-index: 3;
-  opacity: 0;
-  -webkit-transition: all .2s ease;
-  -moz-transition: all .2s ease;
-  -ms-transition: all .2s ease;
-  -o-transition: all .2s ease;
-  transition: all .2s ease;
-}
 #cssmenu ul > li.has-sub::after {
   content: "";
   display: block;
@@ -125,66 +83,8 @@
 #cssmenu ul > li.open::after {
   border-top-color: #ffffff;
 }
-#cssmenu ul > li.has-sub.open > a::after {
-  opacity: 1;
-  bottom: -13px;
-}
-#cssmenu ul > li.has-sub.open > a::before {
-  opacity: 1;
-  bottom: -12px;
-}
 #cssmenu ul ul {
   display: none;
-}
-#cssmenu ul ul li {
-  //border-left: 1px solid #ccc;
-  //border-right: 1px solid #ccc;
-}
-#cssmenu ul ul li a {
-  background: #f1f1f1;
-  display: block;
-  position: relative;
-  font-size: 15px;
-  padding: 14px 20px;
-  border-bottom: 1px solid #dddddd;
-  color: #777777;
-  font-weight: 300;
-  -webkit-transition: all 0.25s ease-in;
-  -moz-transition: all 0.25s ease-in;
-  -ms-transition: all 0.25s ease-in;
-  -o-transition: all 0.25s ease-in;
-  transition: all 0.25s ease-in;
-}
-#cssmenu ul ul li:first-child > a {
-  padding-top: 18px;
-}
-#cssmenu ul ul ul li {
-  border: 0;
-}
-#cssmenu ul ul li:hover > a,
-#cssmenu ul ul li.open > a,
-#cssmenu ul ul li.active > a {
-  background: #e4e4e4;
-  color: #666666;
-}
-#cssmenu ul ul > li.has-sub > a::after {
-  border-top: 13px solid #dddddd;
-}
-#cssmenu ul ul > li.has-sub > a::before {
-  border-top: 13px solid #e4e4e4;
-}
-#cssmenu ul ul ul li a {
-  padding-left: 30px;
-}
-#cssmenu ul ul > li.has-sub::after {
-  top: 18.5px;
-  border-width: 6px;
-  border-top-color: #777777;
-}
-#cssmenu ul ul > li:hover::after,
-#cssmenu ul ul > li.active::after,
-#cssmenu ul ul > li.open::after {
-  border-top-color: #666666;
 }
 /* </Menu> */
 
@@ -266,3 +166,5 @@
   }
 }
 /* </Back Top button>*/
+
+* {box-sizing:border-box;}

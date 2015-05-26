@@ -103,8 +103,16 @@ body {
     margin-top: 7px;
 }
 
-.table-variable{
-    border-color:#cccccc;
-    border-bottom: 1px solid grey;
-    width: 100%;
-  }
+table {
+border-spacing:0px;
+border-collapse:collapse;
+}
+
+.table-variable {
+  border-bottom: 1px solid grey;
+  width: 100%;
+}
+  
+.table-variable td {
+  padding: 2px 0 4px;
+}
