@@ -91,7 +91,7 @@ function getUniqueArrayVariablesDictionary(arrayVariableText, clickCount, groupI
 }
 
 function loadArrayVariableInputs(arrayRowTableId, arrayVariablesDictionary) {
-    var str = '<tr valign="left"><td>';
+    var str = '<tr valign="left"><td colspan="2">';
     $.each(arrayVariablesDictionary, function (key, val) {
         str += '<input type="text" class="value" value="' + key + '" variableId="' + val + '" /> &nbsp;';
     });

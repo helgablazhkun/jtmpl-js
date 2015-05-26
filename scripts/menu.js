@@ -1,8 +1,8 @@
 $(document).ready(function() {
    
-    $(".button").click(function() {
+    $(".button-menu").click(function () {
         $(this).closest(".menu-container").toggleClass("active");
-    })
+    });
 
     $('#cssmenu li.has-sub>a').on('click', function () {
         $(this).removeAttr('href');
