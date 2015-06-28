@@ -81,10 +81,18 @@ function getHtmlWithounNumerationElements(rootElementId, classToRemove) {
     return strip(html);
 }
 
+function replaceAllLineBreaks(html) {
+    var isWindowsOperationSystem = navigator.userAgent.toLowerCase().indexOf("windows") > -1;
+    var replaceSymbol = isWindowsOperationSystem?'\r\n':'\n';
+    html.replace(/(\r\n|\n|\r)/g,replaceSymbol);
+    return html;
+}
+
 function getHtmlWithoutElements(rootElementId, classToRemove) {
     var html = getHtmlWithounNumerationElements(rootElementId, classToRemove);
     html = getHtmlWithoutLinesWithKeys(strip(html));
-    html = getHtmlWithoutTextBeforeKeys(html)
+    html = getHtmlWithoutTextBeforeKeys(html);
+    html = replaceAllLineBreaks(html);
     return html;
 }
 
