@@ -49,15 +49,23 @@ function getHtmlWithoutTextBeforeKeys(html) {
     var keys = getKeysForRemoveTextBefore();
     var i = 0;
     var index = -1;
-    while (i < keys.length && index<=-1) {
+    var keyIndexes =[];
+    while (i < keys.length) {
         var key = keys[i];
         var regex = new RegExp('^\\b' + key + '\\b\\s+{\\s*', 'm');
         var index = html.regexIndexOf(regex, 0);
         if (index > -1) {
-            html = html.replaceBetween(0, index, '');
+            keyIndexes.push(index);            
         }
         i++;
     };
+
+    if(keyIndexes.length>0)
+    {
+        keyIndexes.sort(function(a,b){return a-b});
+        html = html.replaceBetween(0, keyIndexes[0], '');
+    }
+
     return html;
 }
 
@@ -81,18 +89,10 @@ function getHtmlWithounNumerationElements(rootElementId, classToRemove) {
     return strip(html);
 }
 
-function replaceAllLineBreaks(html) {
-    var isWindowsOperationSystem = navigator.userAgent.toLowerCase().indexOf("windows") > -1;
-    var replaceSymbol = isWindowsOperationSystem?'\r\n':'\n';
-    html.replace(/(\r\n|\n|\r)/g,replaceSymbol);
-    return html;
-}
-
 function getHtmlWithoutElements(rootElementId, classToRemove) {
     var html = getHtmlWithounNumerationElements(rootElementId, classToRemove);
     html = getHtmlWithoutLinesWithKeys(strip(html));
-    html = getHtmlWithoutTextBeforeKeys(html);
-    html = replaceAllLineBreaks(html);
+    html = getHtmlWithoutTextBeforeKeys(html)
     return html;
 }
 
